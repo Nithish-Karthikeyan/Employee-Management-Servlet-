@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+                        "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+                        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name = "com.ideas2it.model.LeaveRecord" table = "leave_record">
+        <id name = "leaveId" column = "leave_id">
+            <generator class="increment"/>
+        </id>
+
+        <property name="fromDate" column="start_date" type="string" length="20"/>
+        <property name="toDate" column="end_date" type="string" length="20"/>
+        <property name="leaveType" column="leave_type" type="string" length="20"/>
+        <property name="createdAt" column="created_at" type="string" length="30"/>
+        <property name="modifiedAt" column="modified_at" type="string" length="30"/>
+        <property name="deleted" column="deleted" type="integer"/>
+
+        <many-to-one class="com.ideas2it.model.Employee" name="employee" column="employee_id" not-null="true"/>
+ 
+     </class>
+</hibernate-mapping>

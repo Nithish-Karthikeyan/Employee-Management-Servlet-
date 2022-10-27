@@ -1,9 +1,5 @@
 package com.ideas2it.model;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -11,13 +7,12 @@ import java.util.List;
  * Contains the setter and getter methods for employee attributes
  *
  * @author Nithish K
- * @verison 1.0
+ * @version 1.0
  * @since 12.09.2022
  */
 public class Employee {
     private String employeeId;
     private String employeeName;
-    private int employeeAge;
     private String dateOfBirth;
     private String employeeGender;
     private String mobileNumber;
@@ -39,7 +34,6 @@ public class Employee {
         this.employeeName = employeeName;
         this.employeeGender = employeeGender;
         this.dateOfBirth = dateOfBirth;
-        this.employeeAge = setEmployeeAge(dateOfBirth);
         this.mobileNumber = mobileNumber;
         this.emailId = emailId; 
         this.designation = designation;
@@ -123,26 +117,6 @@ public class Employee {
         return designation;
     }
 
-    public int getEmployeeAge() {
-        return employeeAge;
-    }
-
-    public int setEmployeeAge(String dateOfBirth) {
-        int age = 0;
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-        Calendar calendar = Calendar.getInstance();
-
-        try {
-            dateFormat.setLenient(false);
-            Date birthDate = dateFormat.parse(dateOfBirth);
-            calendar.setTime(birthDate);
-            Calendar currentDate = Calendar.getInstance();
-            age = currentDate.get(Calendar.YEAR) - calendar.get(Calendar.YEAR);
-        } catch (ParseException e) {
-        }
-        return age;
-    }
-   
     public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
     }
@@ -188,7 +162,6 @@ public class Employee {
         String displayEmployeeDetails = "\nEmployee ID              : "+employeeId+"\n"
                                          +"Employee Type            : "+employeeType+"\n"
                                          +"Employee Name            : "+employeeName+"\n"
-                                         //+"Employee Age             : "+employeeAge+"\n"
                                          +"Employee Gender          : "+employeeGender+"\n"
                                          +"Employee Mobile Number   : "+mobileNumber+"\n"
                                          +"Employee Email Id        : "+emailId+"\n"

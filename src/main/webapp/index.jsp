@@ -13,5 +13,6 @@
         <a href = "employee.jsp">Employee Details</a><br><br>
         <a href = "leaveRecords.jsp">Leave Records</a><br><br>
         <a href = "projects.jsp">Project Details</a><br><br>
+        <a href = "getEmployeeForProject.jsp">Assign Employee</a><br><br>
     </body>
 </html>

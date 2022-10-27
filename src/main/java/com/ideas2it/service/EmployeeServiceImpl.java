@@ -14,12 +14,12 @@ import java.util.List;
  * It contains methods for manipulating employee details
  *
  * @author Nithish K
- * @verison 1.0
+ * @version 1.0
  * @since 14.09.2022
  */
 public class EmployeeServiceImpl implements EmployeeService {
 
-    private EmployeeDao employeeDaoImpl = new EmployeeDaoImpl();
+    private final EmployeeDao employeeDaoImpl = new EmployeeDaoImpl();
     
     @Override 
     public String addEmployee(Employee employee) {
@@ -33,8 +33,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Employee getEmployeeById(String id) throws HibernateException, NoResultException {
-	return employeeDaoImpl.getEmployeeById(id);
+    public Employee getEmployeeById(String employeeId) throws HibernateException, NoResultException {
+	return employeeDaoImpl.getEmployeeById(employeeId);
     }
 
     @Override
@@ -57,7 +57,33 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeeDaoImpl.assignProject(employee, project);
     }
 
-    public List<Object[]> getEmployeeDetails(String employeeId) {
-        return employeeDaoImpl.getEmployeeDetails(employeeId);
+    @Override
+    public boolean validateEmailId(String emailId) {
+        List<Employee> employees = employeeDaoImpl.getEmployees();
+        boolean isValid = false;
+        if (!employees.isEmpty()) {
+            for (Employee employee : employees) {
+                if (employee.getEmailId().equals(emailId)) {
+                    isValid = true;
+                    break;
+                }
+            }
+        }
+        return isValid;
+    }
+
+    @Override
+    public boolean validateMobileNumber(String mobileNumber) {
+        List<Employee> employees = employeeDaoImpl.getEmployees();
+        boolean isValid = false;
+        if (!employees.isEmpty()) {
+            for (Employee employee : employees) {
+                if (employee.getMobileNumber().equals(mobileNumber)) {
+                    isValid = true;
+                    break;
+                }
+            }
+        }
+        return isValid;
     }
 }

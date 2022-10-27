@@ -10,7 +10,7 @@ import java.util.List;
  * Deals with the employee leave Record
  *
  * @author Nithish K
- * @verison 1.0
+ * @version 1.0
  * @since 19.09.2022
  */
 public interface LeaveRecordDao {
@@ -19,7 +19,7 @@ public interface LeaveRecordDao {
      * Add a new leave Record to the data
      *
      * @param leaveRecord  - to add a new leaveRecord
-     * @return boolean
+     * @return int
      */
     int addLeaveRecord(LeaveRecord leaveRecord);
 
@@ -28,7 +28,7 @@ public interface LeaveRecordDao {
      * Custom exception is created when employee doesn't 
      * match with the id it shows employee not found exception
      *
-     *@param employeeId
+     *@param employeeId Get employeeId
      *@return List<LeaveRecord> 
      */
     List<LeaveRecord> getLeaveRecordByEmployeeId(String employeeId);
@@ -36,7 +36,7 @@ public interface LeaveRecordDao {
     /**
      *Insert the updated details of the leave Record in the database
      *
-     *@param leaveEntry
+     *@param leaveEntry Get the updated leave record object from the leave record service
      *@return boolean 
      */
     boolean updateLeaveRecord(LeaveRecord leaveEntry);
@@ -53,8 +53,8 @@ public interface LeaveRecordDao {
      * Delete the employee leave record from the database
      * by using employeeId
      *
-     * @param employeeId
-     * @return boolean
+     * @param employeeId Get employeeId from the leave record service
+     * @return int
      */
     int removeLeaveRecord(String employeeId);
 

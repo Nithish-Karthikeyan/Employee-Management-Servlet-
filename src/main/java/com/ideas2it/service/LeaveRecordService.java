@@ -9,7 +9,7 @@ import java.util.List;
  * This interface contains methods for handling employee leave Records
  *
  * @author Nithish K
- * @verison 1.0
+ * @version 1.0
  * @since 19.09.2022
  */
 public interface LeaveRecordService {
@@ -18,36 +18,36 @@ public interface LeaveRecordService {
      * This method gets the input from the controller
      * and passes the leave record to the LeaveRecord Dao
      *
-     * @param leaveRecord
-     * @return boolean
+     * @param leaveRecord Get leave record from the controller
+     * @return int
      */
-    public int addLeaveRecord(LeaveRecord leaveRecord);
+    int addLeaveRecord(LeaveRecord leaveRecord);
 
     /**
      * Passes employee ID to LeaveRecord Dao to get leave records of particular employee
      * Custom exception is created when employee doesn't 
      * match with the id it shows employee not found exception
      *
-     * @param id
+     * @param employeeId Get employeeID from the controller
      * @return List<LeaveRecord>
      */
-    public List<LeaveRecord> getLeaveRecordByEmployeeId(String id) ;
+    List<LeaveRecord> getLeaveRecordByEmployeeId(String employeeId) ;
 
     /**
      * Calls the method in LeaveRecordDao to insert the updated value of leave record
      *
-     * @param leaveEntry
+     * @param leaveEntry Get update leave record from the controller
      * @return boolean 
      */
-    public boolean updateLeaveRecord(LeaveRecord leaveEntry);
+    boolean updateLeaveRecord(LeaveRecord leaveEntry);
 
     /**
-     * Passes the employee Id to LeavaRecordDao which the user want to delete 
+     * Passes the employee ID to Leave RecordDao which the user want to delete
      *
-     * @param employeeId
-     * @return boolean
+     * @param employeeId Get employeeID from the controller
+     * @return int
      */
-    public int removeLeaveRecord(String employeeId);
+    int removeLeaveRecord(String employeeId);
 
     /**
      * Gets the entire leave Records from
@@ -55,6 +55,6 @@ public interface LeaveRecordService {
      *
      * @return List<LeaveRecord> 
      */
-    public List<LeaveRecord> getLeaveRecords();
+    List<LeaveRecord> getLeaveRecords();
 
 }

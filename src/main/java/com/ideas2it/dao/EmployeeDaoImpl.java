@@ -1,12 +1,12 @@
 package com.ideas2it.dao;
 
+import com.ideas2it.databaseconnection.DatabaseConnection;
 import com.ideas2it.model.Employee;
 import com.ideas2it.model.EmployeeProject;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 
 import javax.persistence.NoResultException;
@@ -20,12 +20,11 @@ import java.util.List;
  * It manages the employee data
  *
  * @author Nithish K
- * @verison 1.0
+ * @version 1.0
  * @since 14.09.2022
  */
 public class EmployeeDaoImpl implements EmployeeDao {
-    private final SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
- 
+    private final SessionFactory sessionFactory = DatabaseConnection.getConnection();
     @Override
     public String addEmployee(Employee employee) {
         Session session = sessionFactory.openSession();
@@ -81,7 +80,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
     @Override
     public Employee getEmployeeById(String employeeId) throws HibernateException, NoResultException {
         Session session = sessionFactory.openSession();
-        Employee employee = null;
+        Employee employee;
         try {
             Transaction transaction = session.beginTransaction();
             Query query = session.createQuery("FROM Employee WHERE employeeId = :employeeId AND deleted = 0");
@@ -169,27 +168,5 @@ public class EmployeeDaoImpl implements EmployeeDao {
             session.close();
         }
         return isAdded;
-    }
-
-    @Override
-    public List<Object[]> getEmployeeDetails(String employeeId) {
-       List<Object[]> employeeInformation = null;
-        Session session = sessionFactory.openSession();
-
-        try {
-            String employeeInfo =  "FROM Employee e "
-                                  //+"INNER JOIN LeaveRecord l ON l.employee = :employeeId "
-                                  +"INNER JOIN EmployeeProject p ON p.projectId = "
-                                  +"(SELECT p.id FROM p.employees em WHERE em.employeeId = :employeeId)"
-                                  +"WHERE e.employeeId = :employeeId ";
-            Query query = session.createQuery(employeeInfo);
-            query.setParameter("employeeId",employeeId);
-            employeeInformation = query.getResultList();
-        } catch (HibernateException e) {
-            System.out.println(e);
-        } finally {
-            session.close();
-        }
-        return employeeInformation;
     }
 }

@@ -5,7 +5,6 @@ import com.ideas2it.dao.EmployeeProjectDaoImpl;
 import com.ideas2it.model.EmployeeProject;
 
 import java.util.List;
-
 public class EmployeeProjectServiceImpl implements EmployeeProjectService {
 
     private final EmployeeProjectDao employeeProjectDaoImpl = new EmployeeProjectDaoImpl();

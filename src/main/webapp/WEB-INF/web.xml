@@ -31,6 +31,14 @@
         <servlet-name>EmployeeServlet</servlet-name>
         <url-pattern>/getEmployee</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EmployeeServlet</servlet-name>
+        <url-pattern>/assignEmployee</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EmployeeServlet</servlet-name>
+        <url-pattern>/getEmployeeForProjects</url-pattern>
+    </servlet-mapping>
 
     <servlet>
         <servlet-name>LeaveRecordServlet</servlet-name>

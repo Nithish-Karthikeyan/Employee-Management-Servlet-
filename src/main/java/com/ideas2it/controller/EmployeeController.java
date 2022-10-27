@@ -11,15 +11,13 @@ import javax.persistence.NoResultException;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
- * This class is the controller class which contains main method
- * This class gets input from the user and print the employee details
- * leave record and project details
+ * This class gets input from the servlet and pass the employee details
+ * leave record and project details to service
  *
  * @author Nithish K
  * @version 1.0
- * @since 17.09.2022
+ * @since 12.10.2022
  */
 public class EmployeeController {
 
@@ -29,13 +27,15 @@ public class EmployeeController {
 
 
     /**
-     * Gets the employee details from the user.
+     * Gets the employee details from the employee servlet.
      * This method invokes another method for creating employee id
      * Gets input for employee name, employee Type, dateOfBirth, mobile number
      * email-id, designation
      * Every parameter is validating by validation util class
+     * @param employee gets employee object
      */
     public String addEmployee(Employee employee) {
+        String status;
         DateTimeUtils dateTimeUtils = new DateTimeUtils();
         String employeeId = employeeServiceImpl.createEmployeeId();
         String name = employee.getEmployeeName();
@@ -43,27 +43,39 @@ public class EmployeeController {
         String employeeGender = employee.getEmployeeGender();
         String dateOfBirth = employee.getDateOfBirth();
         String mobileNumber = employee.getMobileNumber();
+        boolean isValidMobileNumber = employeeServiceImpl.validateMobileNumber(mobileNumber);
         String emailId = employee.getEmailId();
+        boolean isValidEmailId = employeeServiceImpl.validateEmailId(emailId);
         String designation = employee.getDesignation();
         String createdAt = dateTimeUtils.getDate();
         String modifiedAt = dateTimeUtils.getDate();
 
-        employee = new Employee(employeeId, employeeType,
-                                         name, dateOfBirth, employeeGender,
-                                         mobileNumber, emailId, designation, 
-                                         createdAt, modifiedAt);
-        return employeeServiceImpl.addEmployee(employee);
+        if (isValidEmailId && isValidMobileNumber) {
+            status = "Mobile Number and Email ID Already Exists";
+        } else if(isValidEmailId) {
+            status = "Email ID Already Exists";
+        } else if(isValidMobileNumber) {
+            status = "Mobile Number Already Exists";
+        } else {
+            employee = new Employee(employeeId, employeeType,
+                    name, dateOfBirth, employeeGender,
+                    mobileNumber, emailId, designation,
+                    createdAt, modifiedAt);
+            status = employeeServiceImpl.addEmployee(employee);
+        }
+        return status;
     }      
 
     /**
-     * This method print the employee details
+     * Get the employee details from the employee service
      */ 
     public List<Employee> printEmployees() {
         return employeeServiceImpl.getEmployees();
     }
 
     /**
-     * Get the employee id from the user 
+     * Get the employee by using employee ID
+     * @param employeeId gets the employeeId from the servlet
      */
     public Employee getEmployeeById(String employeeId) throws HibernateException, NoResultException {
         return employeeServiceImpl.getEmployeeById(employeeId);
@@ -72,8 +84,8 @@ public class EmployeeController {
     /**
      * Request the update employee method in employee service
      * to update the employee
-     * @param employee
-     * @return
+     * @param employee Gets the updated employee object from servlet
+     * @return boolean value
      */
 
     public boolean updateEmployee(Employee employee) {
@@ -81,82 +93,64 @@ public class EmployeeController {
         employee.setModifiedAt(dateTimeUtils.getDate());
         return employeeServiceImpl.updateEmployee(employee);
     }
-   
 
     /**
-     * Gets the employee id which the user 
-     * wants to remove from the data
-      */
+     * Gets the employee id from the servlet which the user
+     * wants to remove from the database
+     * @return int value
+     */
     public int deleteEmployee(String employeeId) {
         return employeeServiceImpl.removeEmployee(employeeId);
     }
 
     /**
-     * Gets the leave records from the user
-     * First thing it gets the employee id and validates
-     * the employee is existed or not exist
-     * If employee exist it 
-     * Gets input for fromDate, toDate and leave type
+     * Gets the leave records from the servlet
+     * @param leaveRecord get leaveRecord object from leave record servlet
+     * @param employee get employee object from employee servlet
+     * @return int
      */
     public int addLeaveRecord(LeaveRecord leaveRecord, Employee employee) {
-        final int MAXIMUM_LEAVE_COUNT = 10;
-        final int EMPTY_ID = 0;
-
         DateTimeUtils dateTimeUtils = new DateTimeUtils();
-
-        //int leaveCount = getEmployeeLeaveCount(employeeId);
-        //System.out.println("You have "+ (MAXIMUM_LEAVE_COUNT - leaveCount)+" left");
-
+        int leaveId;
         String fromDate = leaveRecord.getFromDate();
         String toDate = leaveRecord.getToDate();
         String leaveType = leaveRecord.getLeaveType();
         String createdAt = dateTimeUtils.getDate();
         String modifiedAt = dateTimeUtils.getDate();
-        leaveRecord = new LeaveRecord(employee, fromDate, toDate, leaveType,
-                                                      createdAt, modifiedAt);
-        return leaveRecordServiceImpl.addLeaveRecord(leaveRecord);
-    }
+        boolean isValidDate = dateTimeUtils.validateLeaveDate(fromDate, toDate);
 
-    /**
-     * Get the number of leaves taken by the employee
-     * It validates the employee by employee id
-     * If employee exist leave swill be calculated
-     * If employee does not exist it show employee not found exception
-     *
-     *//*
-    public int getEmployeeLeaveCount(String employeeId) {
-        List<LeaveRecord> leaveRecords = new ArrayList<LeaveRecord>();
-        LocalDate firstDate = null;
-        LocalDate secondDate = null;
-        int leaveCount = 0;
-        leaveRecords = leaveRecordServiceImpl.getLeaveRecordByEmployeeId(employeeId);
-
-        DateTimeUtils dateTimeUtils = new DateTimeUtils();
-        for (LeaveRecord leaveEntry :leaveRecords) {
-            firstDate = dateTimeUtils.getLocalDateFormat(leaveEntry.getFromDate());
-            secondDate = dateTimeUtils.getLocalDateFormat(leaveEntry.getToDate());
-            int count = dateTimeUtils.findLeaveCount(firstDate, secondDate);
-            leaveCount+=count; 
+        if(isValidDate) {
+            leaveRecord = new LeaveRecord(employee, fromDate, toDate, leaveType,
+                    createdAt, modifiedAt);
+            leaveId = leaveRecordServiceImpl.addLeaveRecord(leaveRecord);
+        } else {
+            leaveId = 0;
         }
-        return leaveCount;
+        return leaveId;
     }
-*/
 
     /**
-     * Print all the leave records of the employees
+     * Get the leave records of the employees
      */
     public List<LeaveRecord> printLeaveRecords() {
         return leaveRecordServiceImpl.getLeaveRecords();
     }
 
     /**
-     * Print the leave Record by employee-Id
-     * @param employeeId
+     * Get leave Record by employee-Id
+     * @param employeeId Gets the employeeId as an input
+     * @return List of leave records
      */
     public List<LeaveRecord> getLeaveRecordByEmployeeId(String employeeId) {
         return leaveRecordServiceImpl.getLeaveRecordByEmployeeId(employeeId);
     }
 
+    /**
+     * Gets the leave record by using leave ID for update leave Record
+     * @param leaveId Gets the leaveID from the servlet
+     * @param employeeId Gets employeeID from the servlet
+     * @return leave record
+     */
     public LeaveRecord getLeaveRecord(int leaveId, String employeeId) {
         LeaveRecord leaveRecord = null;
         List<LeaveRecord> leaveRecords = getLeaveRecordByEmployeeId(employeeId);
@@ -164,17 +158,17 @@ public class EmployeeController {
         for (LeaveRecord leaveEntry: leaveRecords) {
             if (leaveEntry.getLeaveId() == leaveId) {
                 leaveRecord = leaveEntry;
-                return leaveRecord;
             }
         }
-        return null;
+        return leaveRecord;
     }
 
     /**
      * Request the update employee leave record method in employee leave record service 
      * to update the leave record
      *
-     * @param leaveRecord
+     * @param leaveRecord gets updated leave record object from the servlet
+     * @return boolean
      */
     public boolean updateLeaveRecord(LeaveRecord leaveRecord) {
         DateTimeUtils dateTimeUtils = new DateTimeUtils();
@@ -183,8 +177,10 @@ public class EmployeeController {
     }
 
     /**
-     * Gets the employee id which the user 
-     * wants to remove the leave record the data
+     * Gets the employee id from the servlet
+     * to remove the leave record the database
+     * @param employeeId gets employeeId from the servlet
+     * @return int
      */
     public int deleteLeaveRecord(String employeeId) {
         return leaveRecordServiceImpl.removeLeaveRecord(employeeId);
@@ -192,12 +188,9 @@ public class EmployeeController {
 /*------------------------Employee Project*----------------------------*/
 
     /**
-     * Gets the employee project from the user
-     * First thing it gets the employee id and validates
-     * the employee is existed or not exist
-     * If employee exist it 
-     * Gets input for project name, project manager id and start date of project
+     * Gets the employee project from the employee project servlet
      * @param project getting project object from the servlet
+     * @return int
      */
     public int addEmployeeProject(EmployeeProject project,Employee employee) {
         DateTimeUtils dateTimeUtils = new DateTimeUtils();
@@ -221,14 +214,17 @@ public class EmployeeController {
     }
 
     /**
-     * Print all the employee projects of the employees
+     * Get List of employee projects of the employees
+     * @return List of Employee Project
      */
     public List<EmployeeProject> printEmployeeProjects() {
         return employeeProjectServiceImpl.getEmployeeProjects();
     }
 
     /**
-     * Print the Employee Project by employee_Id
+     * Get Employee Project by using employee_Id
+     * @param employeeId Get employeeId from the servlet
+     * @return List of Employee project
      */
     public List<EmployeeProject> getEmployeeProjectByEmployeeId(String employeeId) {
         return employeeProjectServiceImpl.getEmployeeProjectByEmployeeId(employeeId);
@@ -238,7 +234,8 @@ public class EmployeeController {
      * Request the update employee project method in employee project service 
      * to update the project details
      *
-     * @param employeeProject
+     * @param employeeProject Get updated employee project object from the servlet
+     * @return boolean
      */
     public boolean updateEmployeeProject(EmployeeProject employeeProject) {
         DateTimeUtils dateTimeUtils = new DateTimeUtils();
@@ -246,6 +243,11 @@ public class EmployeeController {
         return employeeProjectServiceImpl.updateEmployeeProject(employeeProject);
     }
 
+    /**
+     * Get the employee project using project ID
+     * @param projectId Get the project ID from the servlet
+     * @return Employee project
+     */
     public EmployeeProject getProjectById(int projectId) {
         EmployeeProject project = null;
         List<EmployeeProject> projects = employeeProjectServiceImpl.getEmployeeProjects();
@@ -258,31 +260,13 @@ public class EmployeeController {
         return project;
     }
 
-/*    public void assignProject() {
-        if (employee != null) {
-            printEmployeeProjects();
-            System.out.println("Enter the project id for the employee");
-            int projectId = scanner.nextInt();
-            EmployeeProject project = getProjectById(projectId);
-
-            if (project != null) {
-                employeeServiceImpl.assignProject(employee, project);
-            }
-        }   
+    /**
+     * Assign the employee for the project
+     * @param employee get employee object from the employee servlet
+     * @param project get project object from the employeeProject servlet
+     * @return boolean
+     */
+   public boolean assignProject(Employee employee, EmployeeProject project) {
+       return employeeServiceImpl.assignProject(employee, project);
     }
-
-    public void printAllEmployeeDetails() {
-        System.out.println("Enter the employee ID");
-        String employeeId = scanner.next();
-        List<Object[]> employeeInformation = employeeServiceImpl.getEmployeeDetails(employeeId);
-
-        for(Object[] employeeDetail : employeeInformation) {
-            Employee employee = (Employee) employeeDetail[0];
-            //LeaveRecord leaves = (LeaveRecord) employeeDetail[1];
-            EmployeeProject project = (EmployeeProject) employeeDetail[1];
-            System.out.println(employee);
-            //System.out.println(leaves);
-            System.out.println(project);
-        }
-    }*/
 }

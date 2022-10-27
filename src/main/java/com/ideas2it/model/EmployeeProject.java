@@ -7,7 +7,7 @@ import java.util.List;
  * Contains the setter and getter methods for employeeProject attributes
  *
  * @author Nithish K
- * @verison 1.0
+ * @version 1.0
  * @since 19.09.2022
  */
 public class EmployeeProject {

@@ -9,7 +9,7 @@ import java.util.List;
  * This interface contains methods for handling employee details
  *
  * @author Nithish K
- * @verison 1.0
+ * @version 1.0
  * @since 19.09.2022
  */
 public interface EmployeeProjectService {
@@ -18,20 +18,20 @@ public interface EmployeeProjectService {
      * This method gets the input from the controller
      * and passes the employee object to the Employee Project Dao
      *
-     * @param employeeProject
-     * @return boolean
+     * @param employeeProject get employee project object from the controller
+     * @return int
      */
-    public int addEmployeeProject(EmployeeProject employeeProject);
+    int addEmployeeProject(EmployeeProject employeeProject);
 
     /**
      * Passes employee ID to EmployeeProjectDao to get Project details of particular employee
      * Custom exception is created when employee doesn't 
      * match with the id it shows employee not found exception
      *
-     *@param employeeId
-     *@return Employee
+     *@param employeeId Get employeeId form the controller
+     *@return List of employee projects
      */
-    public List<EmployeeProject> getEmployeeProjectByEmployeeId(String employeeId);
+    List<EmployeeProject> getEmployeeProjectByEmployeeId(String employeeId);
 
     /**
      * Gets the entire employee project list from
@@ -39,14 +39,14 @@ public interface EmployeeProjectService {
      *
      * @return List<EmployeeProject>
      */
-    public List<EmployeeProject> getEmployeeProjects();
+    List<EmployeeProject> getEmployeeProjects();
 
     /**
      * Calls the method in LeaveRecordDao to insert the updated value of LeaveRecord
      *
-     * @param employeeProject
+     * @param employeeProject Get update employeeProject object from the controller
      * @return boolean 
      */
-    public boolean updateEmployeeProject(EmployeeProject employeeProject);
+    boolean updateEmployeeProject(EmployeeProject employeeProject);
 
 }

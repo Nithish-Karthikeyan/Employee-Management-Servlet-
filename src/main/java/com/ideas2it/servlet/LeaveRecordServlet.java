@@ -41,8 +41,11 @@ public class LeaveRecordServlet extends HttpServlet {
 
         if (leaveId > 0)
             status = "Leave Record created";
+        else if (leaveId == 0)
+            status = "Enter Valid From and To Date";
         else
-            status = "Leave Record not created";
+            status = "Leave Record Not Created";
+        request.setAttribute("employee",employee);
         request.setAttribute("status",status);
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("performAddLeaveRecord.jsp");
         requestDispatcher.include(request, response);
@@ -203,7 +206,6 @@ public class LeaveRecordServlet extends HttpServlet {
         String status;
 
         try {
-            Employee employee = employeeController.getEmployeeById(employeeId);
             int updatedRow = employeeController.deleteLeaveRecord(employeeId);
 
             if (updatedRow > 0) {

@@ -11,13 +11,12 @@
         <h2>Projects</h2>
         <%!private Gson gson = new Gson();%>
         <%List<EmployeeProject> projects = (List<EmployeeProject>) request.getAttribute("projects");
-        if(projects != null) {
-            for (EmployeeProject project: projects) {
-                project.setEmployees(null);
-                String employeeProject = this.gson.toJson(project);%><br><br>
-                <%=employeeProject%>
-            <%}%>
+          for (EmployeeProject project: projects) {
+              project.setEmployees(null);
+              String employeeProject = this.gson.toJson(project);%><br><br>
+              <%=employeeProject%>
         <%}%><br><br>
         <a href = "performGetProject.jsp">Back</a><br><br>
     </body>
 </html>
+

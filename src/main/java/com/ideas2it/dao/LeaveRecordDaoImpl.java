@@ -1,11 +1,11 @@
 package com.ideas2it.dao;
 
+import com.ideas2it.databaseconnection.DatabaseConnection;
 import com.ideas2it.model.LeaveRecord;
-import org.hibernate.query.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.cfg.Configuration;
+import org.hibernate.query.Query;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,13 +16,11 @@ import java.util.List;
  * Deals with the employee leave Record
  *
  * @author Nithish K
- * @verison 1.0
+ * @version 1.0
  * @since 19.09.2022
  */
 public class LeaveRecordDaoImpl implements LeaveRecordDao {
-    private SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
-  
-    @Override
+    private final SessionFactory sessionFactory = DatabaseConnection.getConnection();
     public int addLeaveRecord(LeaveRecord leaveRecord) {
         Session session = sessionFactory.openSession();
         int leaveAdded = 0;
@@ -41,7 +39,7 @@ public class LeaveRecordDaoImpl implements LeaveRecordDao {
     @Override
     public List<LeaveRecord> getLeaveRecordByEmployeeId(String employeeId) {
         Session session = sessionFactory.openSession();
-        List<LeaveRecord> leaveRecords = new ArrayList<LeaveRecord>();
+        List<LeaveRecord> leaveRecords = new ArrayList<>();
         try {
             Query query = session.createQuery("FROM LeaveRecord WHERE deleted = 0 AND employee_id = :employeeId");
             query.setParameter("employeeId",employeeId);
@@ -72,7 +70,7 @@ public class LeaveRecordDaoImpl implements LeaveRecordDao {
     @Override
     public List<LeaveRecord> getLeaveRecords() {
         Session session = sessionFactory.openSession();
-        List<LeaveRecord> leaveRecords = new ArrayList<LeaveRecord>();
+        List<LeaveRecord> leaveRecords = new ArrayList<>();
         try {
             Transaction transaction = session.beginTransaction();
             leaveRecords = session.createQuery("FROM LeaveRecord WHERE deleted < 1").list();

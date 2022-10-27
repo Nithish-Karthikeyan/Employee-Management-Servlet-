@@ -3,6 +3,7 @@ package com.ideas2it.servlet;
 import com.google.gson.Gson;
 import com.ideas2it.controller.EmployeeController;
 import com.ideas2it.model.Employee;
+import com.ideas2it.model.EmployeeProject;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -28,6 +29,10 @@ public class EmployeeServlet extends HttpServlet {
 
             case "/updateEmployee":
                 updateEmployee(request, response);
+                break;
+
+            case "/assignEmployee":
+                assignEmployee(request, response);
                 break;
         }
     }
@@ -56,7 +61,6 @@ public class EmployeeServlet extends HttpServlet {
     }
 
     public void addEmployee(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String status;
         String name = request.getParameter("employeeName");
         String employeeType = request.getParameter("employeeType");
         String gender = request.getParameter("gender");
@@ -65,12 +69,10 @@ public class EmployeeServlet extends HttpServlet {
         String emailId = request.getParameter("emailId");
         String designation = request.getParameter("designation");
         Employee employee = new Employee(name,employeeType,gender,dateOfBirth,mobileNumber,emailId,designation);
-        String employeeId = employeeController.addEmployee(employee);
+        String status = employeeController.addEmployee(employee);
 
-        if (employeeId != null) {
-            status = "Employee created successfully with id :"+employeeId;
-        } else {
-            status = "Employee not created";
+        if (status.length() == 5) {
+            status = "Employee created successfully with id :"+status;
         }
         request.setAttribute("status",status);
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("performAddEmployee.jsp");
@@ -96,6 +98,10 @@ public class EmployeeServlet extends HttpServlet {
             case "/getEmployee":
                 getEmployee(request, response);
                 break;
+
+            case "/getEmployeeForProjects":
+                getEmployeeForProject(request, response);
+                break;
         }
     }
 
@@ -114,7 +120,6 @@ public class EmployeeServlet extends HttpServlet {
             requestDispatcher.include(request, response);
         }
     }
-
 
     public void getEmployeeById(HttpServletRequest request, HttpServletResponse response) throws ServletException, NoResultException, IOException {
         try {
@@ -155,4 +160,54 @@ public class EmployeeServlet extends HttpServlet {
         requestDispatcher.include(request, response);
     }
 
+    private void getEmployeeForProject(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        try {
+            String employeeId = request.getParameter("employeeId");
+            Employee employee = employeeController.getEmployeeById(employeeId);
+            List<EmployeeProject> projects = employeeController.printEmployeeProjects();
+            if (null != projects ) {
+                request.setAttribute("employee", employee);
+                request.setAttribute("projects", projects);
+                RequestDispatcher requestDispatcher = request.getRequestDispatcher("performAssignEmployee.jsp");
+                requestDispatcher.include(request, response);
+            } else {
+                request.setAttribute("projects","No projects found");
+                RequestDispatcher requestDispatcher = request.getRequestDispatcher("getEmployeeForProject.jsp");
+                requestDispatcher.include(request, response);
+            }
+
+        } catch (NoResultException e) {
+            request.setAttribute("employee", e.getMessage());
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher("getEmployeeForProject.jsp");
+            requestDispatcher.include(request, response);
+        }
+    }
+
+    private void assignEmployee(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+         String employeeId = request.getParameter("employeeId");
+         try {
+             Employee employee = employeeController.getEmployeeById(employeeId);
+             int projectId = Integer.parseInt(request.getParameter("projectId"));
+             EmployeeProject project = employeeController.getProjectById(projectId);
+             if (null != project) {
+                 boolean status = employeeController.assignProject(employee, project);
+                 if(status) {
+                     request.setAttribute("status", "Employee Assigned Successfully");
+                 } else {
+                     request.setAttribute("status", "Employee Not assigned");
+                 }
+                 RequestDispatcher requestDispatcher = request.getRequestDispatcher("performAssignEmployee.jsp");
+                 requestDispatcher.include(request, response);
+             } else {
+                 request.setAttribute("project", "Invalid project ID");
+             }
+             RequestDispatcher requestDispatcher = request.getRequestDispatcher("performAssignEmployee.jsp");
+             requestDispatcher.include(request, response);
+
+         } catch (NumberFormatException e) {
+             request.setAttribute("employee", e.getMessage());
+             RequestDispatcher requestDispatcher = request.getRequestDispatcher("getEmployeeForProject.jsp");
+             requestDispatcher.forward(request, response);
+        }
+    }
 }

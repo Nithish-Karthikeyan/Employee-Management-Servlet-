@@ -9,9 +9,9 @@
 <h2>Add Leave Record</h2><br>
 <h3>Fill the details</h3><br>
 
+<%Employee employee = (Employee) request.getAttribute("employee");%>
+<%if (employee != null) {%>
 <form action = "addLeaveRecord" method = "post">
-    <%Employee employee = (Employee) request.getAttribute("employee");%>
-    <%if (employee != null) {%>
     <label for = "employeeId">Employee ID :</label>
     <input type= "text" id="employeeId" name="employeeId" value ="<%=employee.getEmployeeId()%>" readonly="readonly" ><br><br>
 
@@ -29,9 +29,9 @@
     </select><br><br>
 
     <input type = "submit" value = "Submit">
-    <%}%>
 </form>
 <h3>${status}</h3><br><br>
-<a href = "leaveRecords.jsp">Back to Menu</a>
+<%}%>
+<a href = "performGetEmployeeForLeave.jsp">Back to Menu</a>
 </body>
 </html>

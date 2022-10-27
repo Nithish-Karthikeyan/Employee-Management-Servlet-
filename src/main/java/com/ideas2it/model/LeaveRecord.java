@@ -5,7 +5,7 @@ package com.ideas2it.model;
  * Contains the setter and getter methods for leaveRecord attributes
  *
  * @author Nithish K
- * @verison 1.0
+ * @version 1.0
  * @since 19.09.2022
  */
 public class LeaveRecord {
@@ -109,7 +109,6 @@ public class LeaveRecord {
     @Override
     public String toString() {
         String displayLeaveRecords = "\nLeave ID      : "+leaveId+"\n"
-                                     // +"Employee ID   : "+employee.getEmployeeId()+"\n"
                                       +"From Date     : "+fromDate+"\n"
                                       +"To Date       : "+toDate+"\n"
                                       +"Leave Type    : "+leaveType+"\n";

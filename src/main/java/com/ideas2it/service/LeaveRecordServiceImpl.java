@@ -1,24 +1,22 @@
 package com.ideas2it.service;
 
-import java.util.List;
-
-import com.ideas2it.exception.EmployeeNotFoundException;
 import com.ideas2it.dao.LeaveRecordDao;
 import com.ideas2it.dao.LeaveRecordDaoImpl;
 import com.ideas2it.model.LeaveRecord;
-import com.ideas2it.model.Employee;
+
+import java.util.List;
 
 /**
  * This class implements the Leave Record Service  
  * Contains methods for handling employee leave Records
  *
  * @author Nithish K
- * @verison 1.0
+ * @version 1.0
  * @since 19.09.2022
  */
 public class LeaveRecordServiceImpl implements LeaveRecordService {
 
-    private LeaveRecordDao leaveRecordDaoImpl = new LeaveRecordDaoImpl();
+    private final LeaveRecordDao leaveRecordDaoImpl = new LeaveRecordDaoImpl();
     
     @Override 
     public int addLeaveRecord(LeaveRecord leaveRecord) {
@@ -44,4 +42,5 @@ public class LeaveRecordServiceImpl implements LeaveRecordService {
     public int removeLeaveRecord(String employeeId) {
         return leaveRecordDaoImpl.removeLeaveRecord(employeeId);
     }
+
 }

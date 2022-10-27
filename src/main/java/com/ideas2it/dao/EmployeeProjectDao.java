@@ -10,7 +10,7 @@ import java.util.List;
  * This interface deals with the employee project data
  *
  * @author Nithish K
- * @verison 1.0
+ * @version 1.0
  * @since 17.09.2022
  */
 public interface EmployeeProjectDao {
@@ -19,7 +19,7 @@ public interface EmployeeProjectDao {
      * Add project details of the employee to the data
      *
      * @param employeeProject  - to add project details of employee
-     * @return boolean
+     * @return int
      */
     int addEmployeeProject(EmployeeProject employeeProject);
 
@@ -28,8 +28,8 @@ public interface EmployeeProjectDao {
      * Custom exception is created when employee doesn't 
      * match with the id it shows employee project details not found exception
      *
-     *@param employeeId
-     *@return EmployeeProject
+     *@param employeeId Get employee ID from the employee Project service
+     *@return List<EmployeeProject>
      */
     List<EmployeeProject> getEmployeeProjectByEmployeeId(String employeeId);
 
@@ -44,7 +44,7 @@ public interface EmployeeProjectDao {
     /**
      * Insert the updated details of the employeeProject in the database
      *
-     * @param employeeProject
+     * @param employeeProject get updated employee project object from the employee project service
      * @return boolean 
      */
     boolean updateEmployeeProject(EmployeeProject employeeProject);
